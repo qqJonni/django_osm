@@ -1,0 +1,27 @@
+[
+  {
+    "station_name": "Гудаури",
+    "latitude": 42.519536,
+    "longitude": 44.542770
+  },
+  {
+    "station_name": "Ведучи",
+    "latitude": 42.69950051481661,
+    "longitude": 45.57311251387269
+  },
+  {
+    "station_name": "Эльбрус",
+    "latitude": 43.26586710528392,
+    "longitude": 42.47804493029434
+  },
+  {
+    "station_name": "Чегет",
+    "latitude": 43.24575760105939,
+    "longitude": 42.52383389424928
+  },
+  {
+    "station_name": "Домбай",
+    "latitude": 43.28940604082318,
+    "longitude": 41.62527091945767
+  }
+]
