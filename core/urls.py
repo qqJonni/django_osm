@@ -2,10 +2,13 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path, include
 from . import views
-from core.views import get_details_json
+from core.views import get_details_json, index
+
+app_name = 'index'
 
 urlpatterns = [
-    path('', views.index, name='index'),
+    path('', index, name='index'),
+    path('category/<int:category_id>/', index, name='category'),
     path('tinymce/', include('tinymce.urls')),
     path('<int:pk>', get_details_json, name='get_details_json'),
 ]

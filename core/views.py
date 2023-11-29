@@ -6,7 +6,7 @@ from core.models import PlaceName, PlaceCategory
 
 
 def serialize_post(location):
-    redirect_url = reverse('get_details_json', args=[location.pk])
+    redirect_url = reverse('index:get_details_json', args=[location.pk])
 
     image_urls = [image.show_photo_preview for image in location.pictures.all()]
 
@@ -26,14 +26,17 @@ def serialize_post(location):
     }
 
 
-def index(request):
-    locations = PlaceName.objects.all()
-    categories = PlaceCategory.objects.all()
+def index(request, category_id=None):
+    if category_id:
+        category = PlaceCategory.objects.get(id=category_id)
+        locations = PlaceName.objects.filter(category=category)
+    else:
+        locations = PlaceName.objects.all()
     context = {
         'places_posts': {"type": "FeatureCollection",
                          "features": [
                              serialize_post(location) for location in locations
-                         ]}, 'locations': locations, 'categories': categories
+                         ]}, 'locations': locations, 'categories': PlaceCategory.objects.all()
     }
     return render(request, 'index.html', context)
 
