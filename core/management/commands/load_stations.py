@@ -1,7 +1,7 @@
 import json
 from django.conf import settings
 from django.core.management.base import BaseCommand
-from core.models import EVChargingLocation
+from core.models import PlaceName
 
 
 class Command(BaseCommand):
@@ -15,7 +15,7 @@ class Command(BaseCommand):
 
         for record in data:
             # add the data to the database
-            EVChargingLocation.objects.get_or_create(
+            PlaceName.objects.get_or_create(
                 station_name=record['station_name'],
                 latitude=record['latitude'],
                 longitude=record['longitude']

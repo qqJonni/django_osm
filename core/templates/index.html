@@ -7,7 +7,7 @@
 
     <script>
         // Получаем данные точек из шаблона и парсим их
-        let stationsData = {{ stations_json|safe }};
+        let stationsData = {{ places_posts|safe }};
 
         // Создаем иконку
         var greenIcon = L.icon({
@@ -28,13 +28,21 @@
         }).addTo(map);
 
         // Добавляем маркеры для каждой точки
-        stationsData.forEach(station => {
+        stationsData.features.forEach(feature => {
             // Создаем маркер
-            var marker = L.marker([station.latitude, station.longitude], {icon: greenIcon}).addTo(map);
+            var marker = L.marker(feature.geometry.coordinates.reverse(), {icon: greenIcon}).addTo(map);
 
             // Добавляем всплывающее окно (popup) с названием локации
-            marker.bindPopup(station.station_name);
+            marker.bindPopup(`
+            <strong>${feature.properties.title}</strong><br>
+            ${feature.properties.description_short}<br>
+            ${feature.properties.description_long}
+            ${feature.properties.image_urls}
+
+        `);
+
         });
     </script>
+
 
 {% endblock %}
