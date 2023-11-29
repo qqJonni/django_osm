@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 
-from core.models import PlaceName
+from core.models import PlaceName, PlaceCategory
 
 
 def serialize_post(location):
@@ -28,11 +28,12 @@ def serialize_post(location):
 
 def index(request):
     locations = PlaceName.objects.all()
+    categories = PlaceCategory.objects.all()
     context = {
         'places_posts': {"type": "FeatureCollection",
                          "features": [
                              serialize_post(location) for location in locations
-                         ]}, 'locations': locations
+                         ]}, 'locations': locations, 'categories': categories
     }
     return render(request, 'index.html', context)
 

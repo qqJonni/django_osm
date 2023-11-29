@@ -1,7 +1,7 @@
 from adminsortable2.admin import SortableAdminBase, SortableInlineAdminMixin
 
 from django.contrib import admin
-from core.models import PlaceName, PlaceImage
+from core.models import PlaceName, PlaceImage, PlaceCategory
 
 
 class PicsInline(SortableInlineAdminMixin, admin.TabularInline):
@@ -15,9 +15,14 @@ class PicsInline(SortableInlineAdminMixin, admin.TabularInline):
     show_photo_preview.allow_tags = True
 
 
+@admin.register(PlaceCategory)
+class PlaceCategoryAdmin(admin.ModelAdmin):
+    fields = ['name']
+
+
 @admin.register(PlaceName)
 class PostAdmin(SortableAdminBase, admin.ModelAdmin):
-    fields = ["title", "short_description", "long_description", "latitude", "longitude"]
+    fields = ["title", "short_description", "long_description", "latitude", "longitude", 'category']
     list_display = ['title']
     inlines = [PicsInline, ]
 

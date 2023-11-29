@@ -6,12 +6,24 @@ from tinymce.models import HTMLField
 from folium_project import settings
 
 
+class PlaceCategory(models.Model):
+    name = models.CharField('Название', max_length=128, unique=True)
+
+    class Meta:
+        verbose_name = 'Категорию'
+        verbose_name_plural = 'Категории'
+
+    def __str__(self):
+        return self.name
+
+
 class PlaceName(models.Model):
     title = models.CharField(max_length=128, verbose_name='Заголовок', unique=True)
     short_description = models.TextField('Короткое описание', blank=True)
     long_description = HTMLField('Полное описание', blank=True)
     longitude = models.FloatField(verbose_name='Долгота точки')
     latitude = models.FloatField(verbose_name='Широта точки')
+    category = models.ForeignKey(PlaceCategory, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = 'Пост'
@@ -43,3 +55,7 @@ class PlaceImage(models.Model):
     @property
     def get_absolute_image_url(self):
         return '{0}{1}'.format(settings.MEDIA_URL, self.picture.url)
+
+
+
+
