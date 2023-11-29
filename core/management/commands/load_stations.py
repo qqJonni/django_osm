@@ -5,7 +5,7 @@ from core.models import EVChargingLocation
 
 
 class Command(BaseCommand):
-    help = 'Load data from EV Station JSON file'
+    """Загрузка данных в БД"""
 
     def handle(self, *args, **kwargs):
         data_file = settings.BASE_DIR / 'data' / ' ski_resort.json'
