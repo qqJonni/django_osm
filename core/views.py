@@ -9,7 +9,6 @@ def serialize_post(location):
     redirect_url = reverse('get_details_json', args=[location.pk])
 
     image_urls = [image.show_photo_preview for image in location.pictures.all()]
-    print(image_urls[0])
 
     return {
         "type": "Feature",
@@ -33,7 +32,7 @@ def index(request):
         'places_posts': {"type": "FeatureCollection",
                          "features": [
                              serialize_post(location) for location in locations
-                         ]}
+                         ]}, 'locations': locations
     }
     return render(request, 'index.html', context)
 
