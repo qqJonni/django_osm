@@ -57,3 +57,13 @@ def get_details_json(request, pk):
     }
 
     return JsonResponse(location_serialize, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
+
+
+def location_details(request, pk):
+    location = get_object_or_404(PlaceName.objects.prefetch_related('pictures'), pk=pk)
+
+    context = {
+        'location': location,
+    }
+    return render(request, 'location_details.html', context)
+
