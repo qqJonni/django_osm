@@ -110,8 +110,9 @@
                     var marker = L.marker(feature.geometry.coordinates.reverse(), {icon: skiIcon}).addTo(map);
 
                     // Добавляем всплывающее окно (popup) с названием локации
+
                     marker.bindPopup(`
-                    <strong><button class="popup-button">${feature.properties.title}</button></strong><br>
+                    <strong><a class="nav-link" href="#">${feature.properties.title} <i class="fas fa-sign-in-alt"></i></a></strong><br>
                     ${feature.properties.image_urls}
                     ${feature.properties.description_short}<br>
                     ${feature.properties.description_long}

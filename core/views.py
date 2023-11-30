@@ -32,6 +32,7 @@ def index(request, category_id=None):
         locations = PlaceName.objects.filter(category=category)
     else:
         locations = PlaceName.objects.all()
+
     context = {
         'places_posts': {"type": "FeatureCollection",
                          "features": [
