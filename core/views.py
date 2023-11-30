@@ -64,6 +64,7 @@ def location_details(request, pk):
 
     context = {
         'location': location,
+        'pictures': location.pictures.all(),  # Добавляем картинки к контексту
     }
     return render(request, 'location_details.html', context)
 
