@@ -4,6 +4,7 @@ from django.utils.html import format_html
 from tinymce.models import HTMLField
 
 from folium_project import settings
+from users.models import User
 
 
 class PlaceCategory(models.Model):
@@ -24,6 +25,10 @@ class PlaceName(models.Model):
     longitude = models.FloatField(verbose_name='Долгота точки')
     latitude = models.FloatField(verbose_name='Широта точки')
     category = models.ForeignKey(PlaceCategory, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор')
+    published_at = models.DateTimeField("Дата и время публикации")
+    update_at = models.DateTimeField("Дата и время изменения публикации")
+    likes = models.ManyToManyField(User, related_name="liked_posts", verbose_name="Кто лайкнул", blank=True)
 
     class Meta:
         verbose_name = 'Пост'
@@ -55,6 +60,18 @@ class PlaceImage(models.Model):
     @property
     def get_absolute_image_url(self):
         return '{0}{1}'.format(settings.MEDIA_URL, self.picture.url)
+
+
+class Comment(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Автор")
+    place = models.ForeignKey(PlaceName, on_delete=models.CASCADE, verbose_name="Место, к которому написан")
+    text = models.TextField("Текст комментария")
+    published_at = models.DateTimeField("Дата и время публикации")
+    update_at = models.DateTimeField("Дата и время изменения комментария")
+
+    class Meta:
+        verbose_name = 'Комментарий'
+        verbose_name_plural = 'Комментарии'
 
 
 
