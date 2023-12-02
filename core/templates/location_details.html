@@ -69,14 +69,40 @@
     <h1>{{ location.title }}</h1>
     <h5>{{ location.short_description }}</h5>
 
-    <div class="clearfix">
-        {% for picture in location.pictures.all %}
-            <img src="{{ picture.picture.url }}" class="col-md-6 float-md-end mb-3 ms-md-3" alt="{{ location.title }}">
-        {% endfor %}
-        <p>
+{#    <div class="clearfix">#}
+{#        {% for picture in location.pictures.all %}#}
+{#            <img src="{{ picture.picture.url }}" class="col-md-6 float-md-end mb-3 ms-md-3" alt="{{ location.title }}">#}
+{#        {% endfor %}#}
+{#        <p>#}
+{#            {{ location.long_description }}#}
+{#        </p>#}
+{#    </div>#}
+        <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-inner">
+      {% for picture in location.pictures.all %}
+    <div class="carousel-item active" data-bs-interval="10000">
+      <img src="{{ picture.picture.url }}" class="d-block w-100" alt="...">
+    </div>
+
+      {% endfor %}
+
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
+
+    <p>
             {{ location.long_description }}
         </p>
-    </div>
+
+  </div>
+</div>
 </div>
 
 

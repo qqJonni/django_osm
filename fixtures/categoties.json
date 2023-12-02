@@ -1,0 +1,1 @@
+[{"model": "core.placecategory", "pk": 1, "fields": {"name": "Горнолыжные комплексы"}}, {"model": "core.placecategory", "pk": 2, "fields": {"name": "Хайкинг"}}, {"model": "core.placecategory", "pk": 3, "fields": {"name": "Полеты в небе"}}, {"model": "core.placecategory", "pk": 4, "fields": {"name": "Пузырьковый угар"}}]

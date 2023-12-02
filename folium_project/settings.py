@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_extensions',
     'core',
+    'users',
 
     'tinymce',
 ]
@@ -127,3 +128,5 @@ TINYMCE_DEFAULT_CONFIG = {
     "custom_undo_redo_levels": 10,
     "language": "ru_RU"
 }
+
+AUTH_USER_MODEL = 'users.User'
