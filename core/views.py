@@ -37,7 +37,8 @@ def index(request, category_id=None):
         'places_posts': {"type": "FeatureCollection",
                          "features": [
                              serialize_post(location) for location in locations
-                         ]}, 'locations': locations, 'categories': PlaceCategory.objects.all()
+                         ]}, 'locations': locations, 'categories': PlaceCategory.objects.all(),
+        'title': 'Where to Travel'
     }
     return render(request, 'index.html', context)
 
@@ -64,7 +65,8 @@ def location_details(request, pk):
 
     context = {
         'location': location,
-        'pictures': location.pictures.all(),  # Добавляем картинки к контексту
+        'pictures': location.pictures.all(),
+        'title': 'Location'
     }
     return render(request, 'location_details.html', context)
 
