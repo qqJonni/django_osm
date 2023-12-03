@@ -15,6 +15,12 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/1.5.2/css/ionicons.min.css">
     <link href="{% static 'dopstyle.css' %}" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+
 </head>
 <body>
 
@@ -109,7 +115,7 @@
                     // Добавляем всплывающее окно (popup) с названием локации
                     marker.bindPopup(`
                     <strong><a class="nav-link" href="/location${feature.properties.detailsUrl}/">${feature.properties.title} <i class="fas fa-sign-in-alt"></i></a></strong>
-                    ${feature.properties.image_urls}
+                    ${feature.properties.image_urls[0]}
 
                     ${feature.properties.description_short}
                     `);

@@ -1,9 +1,9 @@
 from django.http import JsonResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 
-from core.forms import PlaceForm
-from core.models import PlaceName, PlaceCategory
+from core.forms import PlaceForm, PlaceImageForm
+from core.models import PlaceName, PlaceCategory, PlaceImage
 
 
 def serialize_post(location):
@@ -22,7 +22,7 @@ def serialize_post(location):
             "detailsUrl": redirect_url,
             "description_short": location.short_description,
             "description_long": location.long_description,
-            "image_urls": image_urls[0]  # Pass the entire list of image URLs
+            "image_urls": image_urls  # Pass the entire list of image URLs
         }
     }
 
@@ -85,19 +85,34 @@ def full_location_details(request, pk):
 
 def crud_page(request, pk):
     location = get_object_or_404(PlaceName.objects.prefetch_related('pictures'), pk=pk)
+
     if request.method == 'POST':
         form = PlaceForm(request.POST)
-        if form.is_valid():
-            # Привязка автора к месту перед сохранением
+        image_form = PlaceImageForm(request.POST, request.FILES)
+
+        if form.is_valid() and image_form.is_valid():
             new_location = form.save(commit=False)
-            new_location.author = request.user  # или любой другой способ получения пользователя
+            new_location.author = request.user
             new_location.save()
-            form.save_m2m()  # Необходимо для ManyToManyField, если применяется
+
+            # Handle the image
+            picture = image_form.cleaned_data['picture']
+            if picture:
+                PlaceImage.objects.create(place=new_location, picture=picture)
+
+            form.save_m2m()
+
+            return redirect('index:index')  # Redirect to your desired page after successful form submission
+    else:
+        form = PlaceForm()
+        image_form = PlaceImageForm()
 
     context = {
         'location': location,
         'pictures': location.pictures.all(),
         'title': 'Location',
-        'form': PlaceForm()
+        'form': form,
+        'image_form': image_form,
     }
+
     return render(request, 'crud_page.html', context)

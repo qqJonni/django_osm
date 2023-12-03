@@ -3,7 +3,7 @@ from core.models import PlaceName, PlaceImage
 
 
 class PlaceImageForm(forms.ModelForm):
-    picture = forms.CharField(widget=forms.FileInput(attrs={'class': 'custom-file-input'}), required=False)
+    picture = forms.FileField(widget=forms.FileInput(attrs={'class': 'custom-file-input'}), required=False)
 
     class Meta:
         model = PlaceImage
