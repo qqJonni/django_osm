@@ -94,7 +94,26 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form id="add_form" method="get"></form>
+        <form action="{% url 'index:crud_page' user.id %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label class="small mb-1" for="{{ form.title.id_for_label }}"></label>
+                            {{ form.title }}
+            <label class="small mb-1" for="{{ form.short_description.id_for_label }}"></label>
+                            {{ form.short_description }}
+            <label class="small mb-1" for="{{ form.long_description.id_for_label }}"></label>
+                            {{ form.long_description }}
+            <label class="small mb-1" for="{{ form.category.id_for_label }}"></label>
+                           Выберите категорию:  {{ form.category }}
+            <label class="small mb-1" for="{{ form.latitude.id_for_label }}"></label>
+                           {{ form.latitude }}
+            <label class="small mb-1" for="{{ form.longitude.id_for_label }}"></label>
+                           {{ form.longitude }}
+            <div class="custom-file">
+            <input type="file" name="{{ form.picture.name }}" class="custom-file-input" id="{{ form.picture.id_for_label }}">
+            <label class="custom-file-label" for="{{ form.picture.id_for_label }}">Выберите фото</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Добавить</button>
+        </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>

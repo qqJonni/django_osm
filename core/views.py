@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 
+from core.forms import PlaceForm
 from core.models import PlaceName, PlaceCategory
 
 
@@ -84,10 +85,19 @@ def full_location_details(request, pk):
 
 def crud_page(request, pk):
     location = get_object_or_404(PlaceName.objects.prefetch_related('pictures'), pk=pk)
+    if request.method == 'POST':
+        form = PlaceForm(request.POST)
+        if form.is_valid():
+            # Привязка автора к месту перед сохранением
+            new_location = form.save(commit=False)
+            new_location.author = request.user  # или любой другой способ получения пользователя
+            new_location.save()
+            form.save_m2m()  # Необходимо для ManyToManyField, если применяется
 
     context = {
         'location': location,
         'pictures': location.pictures.all(),
-        'title': 'Location'
+        'title': 'Location',
+        'form': PlaceForm()
     }
     return render(request, 'crud_page.html', context)
