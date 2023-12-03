@@ -22,7 +22,7 @@ class PlaceCategoryAdmin(admin.ModelAdmin):
 
 @admin.register(PlaceName)
 class PostAdmin(SortableAdminBase, admin.ModelAdmin):
-    fields = ["title", 'author', "short_description", "long_description", "latitude", "longitude", 'category']
+    fields = ["title", 'author', "short_description", "long_description", "latitude", "longitude", 'category', 'likes']
     list_display = ['title']
     inlines = [PicsInline, ]
 

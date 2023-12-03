@@ -64,15 +64,20 @@
 {#<-------------------------------------------------CONTENT------------------------------------------------->#}
 {#<--------------------------------------------------------------------------------------------------------->#}
 
-
-
-
-
     <div class="container mt-5">
         <!-- Отображение данных о месте -->
         <h1>{{ location.title }}</h1>
         <h5>{{ location.category }}</h5>
-
+        <div class="container mt-5">
+            <ul class="nav">
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">view</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'index:crud_page' location.id %}">correct</a>
+            </li>
+            </ul>
+        </div>
 
         <div class="container mt-5">
             {% for picture in location.pictures.all %}
@@ -80,12 +85,11 @@
             {% endfor %}
         </div>
         <div class="container mt-5">
-            <span>{{ location.short_description|truncatechars:"128" }}</span>
-            <span class="float-right mr-3"><a href="{% url 'index:full_location_details' location.id %}">Go to full place description</a> </span>
+            <span>{{ location.long_description }}</span>
+            <p><a href="{% url 'index:location_details' location.id %}">Go back</a> </p>
+
         </div>
-        <div class="container mt-5">
-            <span><h3>Other places of this user</h3></span>
-        </div>
+
     </div>
 
 

@@ -70,3 +70,24 @@ def location_details(request, pk):
     }
     return render(request, 'location_details.html', context)
 
+
+def full_location_details(request, pk):
+    location = get_object_or_404(PlaceName.objects.prefetch_related('pictures'), pk=pk)
+
+    context = {
+        'location': location,
+        'pictures': location.pictures.all(),
+        'title': 'Location'
+    }
+    return render(request, 'full_location_details.html', context)
+
+
+def crud_page(request, pk):
+    location = get_object_or_404(PlaceName.objects.prefetch_related('pictures'), pk=pk)
+
+    context = {
+        'location': location,
+        'pictures': location.pictures.all(),
+        'title': 'Location'
+    }
+    return render(request, 'crud_page.html', context)

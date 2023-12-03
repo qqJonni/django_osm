@@ -15,6 +15,8 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/1.5.2/css/ionicons.min.css">
     <link href="{% static 'dopstyle.css' %}" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 
 </head>
 <body>
@@ -47,7 +49,7 @@
 {#                        </ul>#}
 {#                    </li>#}
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Каталог <i class="fas fa-shopping-bag"></i> </a>
+                        <a class="nav-link" href="#"><i class="fas fa-shopping-bag"></i> </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Войти <i class="fas fa-sign-in-alt"></i></a>
@@ -64,15 +66,43 @@
 {#<-------------------------------------------------CONTENT------------------------------------------------->#}
 {#<--------------------------------------------------------------------------------------------------------->#}
 
-
-
-
-
     <div class="container mt-5">
         <!-- Отображение данных о месте -->
-        <h1>{{ location.title }}</h1>
+        <h1>My panel</h1>
         <h5>{{ location.category }}</h5>
+        <div class="container mt-5">
+            <ul class="nav">
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{% url 'index:full_location_details' location.id %}">view</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'index:crud_page' location.id %}">correct</a>
+            </li>
+            </ul>
+        </div>
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Добавить место
+    </button>
 
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="add_form" method="get"></form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+        <button type="button" class="btn btn-primary">Добавить</button>
+      </div>
+    </div>
+  </div>
+</div>
 
         <div class="container mt-5">
             {% for picture in location.pictures.all %}
@@ -81,13 +111,16 @@
         </div>
         <div class="container mt-5">
             <span>{{ location.short_description|truncatechars:"128" }}</span>
-            <span class="float-right mr-3"><a href="{% url 'index:full_location_details' location.id %}">Go to full place description</a> </span>
+            <span class="float-right mr-3"><a href="{% url 'index:full_location_details' location.id %}"></a> </span>
         </div>
         <div class="container mt-5">
-            <span><h3>Other places of this user</h3></span>
+            <span><h3>Correct page</h3></span>
         </div>
     </div>
 
 
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
 </body>
 </html>

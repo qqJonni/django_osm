@@ -19,15 +19,15 @@ class PlaceCategory(models.Model):
 
 
 class PlaceName(models.Model):
-    title = models.CharField(max_length=128, verbose_name='Заголовок', unique=True)
+    title = models.CharField(max_length=128, verbose_name='Заголовок')
     short_description = models.TextField('Короткое описание', blank=True)
     long_description = HTMLField('Полное описание', blank=True)
     longitude = models.FloatField(verbose_name='Долгота точки')
     latitude = models.FloatField(verbose_name='Широта точки')
     category = models.ForeignKey(PlaceCategory, on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор')
-    published_at = models.DateTimeField("Дата и время публикации")
-    update_at = models.DateTimeField("Дата и время изменения публикации")
+    published_at = models.DateTimeField("Дата и время публикации", auto_now=True)
+    update_at = models.DateTimeField("Дата и время изменения публикации", auto_now=True)
     likes = models.ManyToManyField(User, related_name="liked_posts", verbose_name="Кто лайкнул", blank=True)
 
     class Meta:
@@ -64,9 +64,10 @@ class PlaceImage(models.Model):
 
 class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Автор")
-    place = models.ForeignKey(PlaceName, on_delete=models.CASCADE, verbose_name="Место, к которому написан")
+    place = models.ForeignKey(PlaceName, on_delete=models.CASCADE, verbose_name="Место, к которому написано",
+                              related_name='comments_places')
     text = models.TextField("Текст комментария")
-    published_at = models.DateTimeField("Дата и время публикации")
+    published_at = models.DateTimeField("Дата и время публикации", auto_now=True)
     update_at = models.DateTimeField("Дата и время изменения комментария")
 
     class Meta:
