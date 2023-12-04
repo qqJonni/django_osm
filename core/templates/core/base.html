@@ -40,18 +40,22 @@
 
 {% block dropdawn %}
 {% endblock %}
-                <li class="nav-item">
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
                         <a class="nav-link" href="{% url 'index:create_location' user.id %}">Добавить место <i class="fas fa-sign-in-alt"></i></a>
                     </li>
+                {% endif %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'users:login' %}">Войти <i class="fas fa-sign-in-alt"></i></a>
                     </li>
+                {% if user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'users:logout' %}">Выйти <i class="fas fa-sign-in-alt"></i></a>
                     </li>
-                <li class="nav-item">
+                    <li class="nav-item">
                         <a class="nav-link" href="{% url 'users:profile' user.id%}">Профиль <i class="fas fa-sign-in-alt"></i></a>
                     </li>
+                {% endif %}
                 </ul>
             </div>
         </div>

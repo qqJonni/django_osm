@@ -22,7 +22,7 @@ def serialize_post(location):
             "detailsUrl": redirect_url,
             "description_short": location.short_description,
             "description_long": location.long_description,
-            "image_urls": image_urls  # Pass the entire list of image URLs
+            "image_urls": image_urls
         }
     }
 
@@ -85,15 +85,11 @@ def create_location(request, pk):
             new_location = form.save(commit=False)
             new_location.author = request.user
             new_location.save()
-
-            # Handle the image
             picture = image_form.cleaned_data['picture']
             if picture:
                 PlaceImage.objects.create(place=new_location, picture=picture)
-
             form.save_m2m()
-
-            return redirect('index:index')  # Redirect to your desired page after successful form submission
+            return redirect('index:index')
     else:
         form = PlaceForm()
         image_form = PlaceImageForm()
@@ -129,12 +125,9 @@ def delete_location(request, pk):
     location = get_object_or_404(PlaceName, pk=pk)
 
     if request.method == 'POST':
-        # Выполнить удаление
         location.delete()
-        # После удаления выполнить редирект на ту же страницу (или куда угодно)
         return redirect('index:index')
 
-    # Если метод GET, отобразить страницу подтверждения удаления
     context = {
         'location': location,
     }
