@@ -19,7 +19,25 @@
             <span class="float-right mr-3"><a href="{% url 'index:update_location' location.id %}">Редактировать пост</a> </span>
         </div>
         <div class="container mt-5">
-            <span><h3>Мои места</h3></span>
+            <p>Комментарии ({{ location.comments_places.count }})</p>
+            <hr>
+
+            {% for comment in location.comments_places.all %}
+                <p>{{ comment.text }}</p>
+                <small>{{ comment.author.username }} - {{ comment.published_at }}</small>
+                <hr>
+            {% endfor %}
+
+            <div class="col-12">
+                <form action="" id="add_form" method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                </form>
+                <button form="add_form" type="submit" class="btn btn-primary">Добавить</button>
+            </div>
+        </div>
+        <div class="container mt-5">
+            <span><h3>Ещё места {{ user.username }}</h3></span>
         </div>
         {% for loc in list_locations %}
             <ul class="list-group mt-4">

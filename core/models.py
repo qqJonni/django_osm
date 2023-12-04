@@ -68,11 +68,15 @@ class Comment(models.Model):
                               related_name='comments_places')
     text = models.TextField("Текст комментария")
     published_at = models.DateTimeField("Дата и время публикации", auto_now=True)
-    update_at = models.DateTimeField("Дата и время изменения комментария")
+    update_at = models.DateTimeField("Дата и время изменения комментария", auto_now_add=True, editable=False)
+    status = models.BooleanField(verbose_name="Видимость коммента", default=True)
 
     class Meta:
         verbose_name = 'Комментарий'
         verbose_name_plural = 'Комментарии'
+
+    def __str__(self):
+        return f'{self.author} - {self.place} - {self.published_at} - {self.update_at}'
 
 
 

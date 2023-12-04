@@ -42,4 +42,4 @@ class PicAdmin(admin.ModelAdmin):
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    fields = ['author', 'place', 'published_at', 'update_at', 'text']
+    fields = ['author', 'place', 'text']
