@@ -1,0 +1,36 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+
+{% block content %}
+	<div class="container mt-5">
+        <!-- Отображение данных о месте -->
+        <h1>{{ location.title }}</h1>
+        <h5>{{ location.category }}</h5>
+
+
+        <div class="container mt-5">
+            {% for picture in location.pictures.all %}
+                <img src="{{ picture.picture.url }}" class="img-thumbnail" alt="...">
+            {% endfor %}
+        </div>
+        <div class="container mt-5">
+            <span>{{ location.short_description|truncatechars:"128" }}</span>
+            <span class="float-right mr-3"><a href="{% url 'index:update_location' location.id %}">Редактировать пост</a> </span>
+        </div>
+        <div class="container mt-5">
+            <span><h3>Мои места</h3></span>
+        </div>
+        {% for loc in list_locations %}
+            <ul class="list-group mt-4">
+                <li class="list-group-item">
+                    <b>{{ loc.title }}</b>
+                    <span>{{ loc.short_description }}</span>
+                    <span class="float-right mr-3"><a href="{% url 'index:location_details' loc.id %}">Перейти</a> </span>
+                </li>
+            </ul>
+        {% endfor %}
+
+    </div>
+{% endblock %}
+

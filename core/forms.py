@@ -25,4 +25,3 @@ class PlaceForm(forms.ModelForm):
     class Meta:
         model = PlaceName
         fields = ['title', 'short_description', 'long_description', 'category', 'latitude', 'longitude']
-

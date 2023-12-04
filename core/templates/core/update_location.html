@@ -1,0 +1,29 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+
+{% block content %}
+    <div class="container mt-4">
+    	<form action="{% url 'index:update_location' location.id %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label class="small mb-1" for="{{ form.title.id_for_label }}"></label>
+                            {{ form.title }}
+            <label class="small mb-1" for="{{ form.short_description.id_for_label }}"></label>
+                            {{ form.short_description }}
+            <label class="small mb-1" for="{{ form.long_description.id_for_label }}"></label>
+                            {{ form.long_description }}
+            <label class="small mb-1" for="{{ form.category.id_for_label }}"></label>
+                           Выберите категорию:  {{ form.category }}
+            <label class="small mb-1" for="{{ form.latitude.id_for_label }}"></label>
+                           {{ form.latitude }}
+            <label class="small mb-1" for="{{ form.longitude.id_for_label }}"></label>
+                           {{ form.longitude }}
+
+            <button type="submit" class="btn btn-primary">Изменить</button>
+        </form>
+    </div>
+
+{% endblock %}
+
+
+

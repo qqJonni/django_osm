@@ -1,0 +1,101 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block dropdawn %}
+	<li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+           data-bs-toggle="dropdown" aria-expanded="false">Категории
+            <i class="fas fa-user-circle"></i>
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            {% for category in categories %}
+                <li>
+                    <a class="dropdown-item" href="{% url 'index:category' category.id %}">{{ category.name }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </li>
+{% endblock %}
+
+{% block map %}
+	    <div class="container mt-4">
+
+            <div id="map" style="height: 600px; width: 100%; margin-top: 55px;"></div>
+            <script>
+                // Получаем данные точек из шаблона и парсим их
+                let stationsData = {{ places_posts|safe }};
+                // Создаем иконку
+                var skiIcon = L.icon({
+                    iconUrl: '{% static "icons/ski.svg" %}',
+                    {#shadowUrl: 'static/leaf-shadow.png',#}
+                    iconSize:     [38, 95],
+                    shadowSize:   [50, 64],
+                    iconAnchor:   [22, 94],
+                    shadowAnchor: [4, 62],
+                    popupAnchor:  [-3, -76]
+                });
+                var skyIcon = L.icon({
+                    iconUrl: 'static/icons/sky.svg',
+                    shadowUrl: 'static/leaf-shadow.png',
+                    iconSize:     [38, 95],
+                    shadowSize:   [50, 64],
+                    iconAnchor:   [22, 94],
+                    shadowAnchor: [4, 62],
+                    popupAnchor:  [-3, -76]
+                });
+                var haykingIcon = L.icon({
+                    iconUrl: 'static/icons/hayking.svg',
+                    shadowUrl: 'static/leaf-shadow.png',
+                    iconSize:     [38, 95],
+                    shadowSize:   [50, 64],
+                    iconAnchor:   [22, 94],
+                    shadowAnchor: [4, 62],
+                    popupAnchor:  [-3, -76]
+                });
+                // Инициализируем карту
+                var map = L.map('map').setView([41.6941, 44.8337], 7);
+                L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                }).addTo(map);
+                // Добавляем маркеры для каждой точки
+                stationsData.features.forEach(feature => {
+                    // Создаем маркер
+                    var marker = L.marker(feature.geometry.coordinates.reverse(), {icon: skiIcon}).addTo(map);
+                    // Добавляем всплывающее окно (popup) с названием локации
+                    marker.bindPopup(`
+                    <strong><a class="nav-link" href="/location${feature.properties.detailsUrl}/">${feature.properties.title} <i class="fas fa-sign-in-alt"></i></a></strong>
+                    ${feature.properties.image_urls[0]}
+
+                    ${feature.properties.description_short}
+                    `);
+                    });
+            </script>
+    </div>
+{% endblock %}
+
+{% block content %}
+	    <div class="container mt-4">
+        <div class="container text-center">
+            <h2>Пользуются популярностью</h2>
+        </div>
+
+        <div class="container text-center">
+            <div class="row">
+                {% for location in locations %}
+                <div class="col">
+                    <div class="card" style="width: 18rem;">
+                        <img src="{{ location.pictures.first.picture.url }}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ location.title }}</h5>
+                            <p class="card-text">{{ location.short_description }}</p>
+                            <a href="{% url 'index:location_details' location.id %}" class="btn btn-primary">Go here</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

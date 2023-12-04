@@ -9,7 +9,7 @@ from common.views import TitleMixin
 
 
 class UserLoginView(TitleMixin, LoginView):
-    template_name = 'login.html'
+    template_name = 'users/login.html'
     form_class = UserLoginForm
     title = 'Login'
 
@@ -17,7 +17,7 @@ class UserLoginView(TitleMixin, LoginView):
 class UserRegistrationView(TitleMixin, SuccessMessageMixin, CreateView):
     model = User
     form_class = UserRegistrationForm
-    template_name = 'registration.html'
+    template_name = 'users/registration.html'
     success_url = reverse_lazy('users:login')
     success_message = 'Регистрация прошла успешно'
     title = 'Registration'
@@ -25,7 +25,7 @@ class UserRegistrationView(TitleMixin, SuccessMessageMixin, CreateView):
 
 class UserProfileView(TitleMixin, UpdateView):
     model = User
-    template_name = 'profile.html'
+    template_name = 'users/profile.html'
     form_class = UserProfileForm
     title = 'Profile'
 

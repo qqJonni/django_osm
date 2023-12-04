@@ -1,4 +1,4 @@
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 
@@ -41,7 +41,7 @@ def index(request, category_id=None):
                          ]}, 'locations': locations, 'categories': PlaceCategory.objects.all(),
         'title': 'Where to Travel'
     }
-    return render(request, 'index.html', context)
+    return render(request, 'core/index.html', context)
 
 
 def get_details_json(request, pk):
@@ -63,27 +63,18 @@ def get_details_json(request, pk):
 
 def location_details(request, pk):
     location = get_object_or_404(PlaceName.objects.prefetch_related('pictures'), pk=pk)
+    locations = PlaceName.objects.all()
 
     context = {
         'location': location,
         'pictures': location.pictures.all(),
-        'title': 'Location'
+        'title': 'Location',
+        'list_locations': locations
     }
-    return render(request, 'location_details.html', context)
+    return render(request, 'core/location_details.html', context)
 
 
-def full_location_details(request, pk):
-    location = get_object_or_404(PlaceName.objects.prefetch_related('pictures'), pk=pk)
-
-    context = {
-        'location': location,
-        'pictures': location.pictures.all(),
-        'title': 'Location'
-    }
-    return render(request, 'full_location_details.html', context)
-
-
-def crud_page(request, pk):
+def create_location(request, pk):
     location = get_object_or_404(PlaceName.objects.prefetch_related('pictures'), pk=pk)
 
     if request.method == 'POST':
@@ -115,4 +106,21 @@ def crud_page(request, pk):
         'image_form': image_form,
     }
 
-    return render(request, 'crud_page.html', context)
+    return render(request, 'core/create_location.html', context)
+
+
+def update_location(request, pk):
+    location = PlaceName.objects.get(pk=pk)
+    if request.method == 'POST':
+        form = PlaceForm(data=request.POST, instance=location)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('index:location_details', args=[pk]))
+    else:
+        form = PlaceForm(instance=location)
+    context = {
+        'form': form,
+        'location': location
+    }
+    return render(request, 'core/update_location.html', context)
+
