@@ -124,3 +124,18 @@ def update_location(request, pk):
     }
     return render(request, 'core/update_location.html', context)
 
+
+def delete_location(request, pk):
+    location = get_object_or_404(PlaceName, pk=pk)
+
+    if request.method == 'POST':
+        # Выполнить удаление
+        location.delete()
+        # После удаления выполнить редирект на ту же страницу (или куда угодно)
+        return redirect('index:index')
+
+    # Если метод GET, отобразить страницу подтверждения удаления
+    context = {
+        'location': location,
+    }
+    return render(request, 'core/delete_location.html', context)
