@@ -32,7 +32,7 @@ def upload_data_to_db(url):
 
     imgs = place_raw["imgs"]
     title = place_raw["title"]
-    category_name = place_raw.get("category")  # Assuming the category is present in the JSON
+    category_name = place_raw.get("category")
 
     try:
         category, _ = PlaceCategory.objects.get_or_create(name=category_name)
@@ -46,7 +46,7 @@ def upload_data_to_db(url):
             long_description=place_raw["description_long"],
             latitude=place_raw["coordinates"]["lat"],
             longitude=place_raw["coordinates"]["lng"],
-            category=category  # Assign the category to the PlaceName instance
+            category=category
         )
     except MultipleObjectsReturned:
         return print("Ошибка: Существует несколько объектов с таким заголовком.")
