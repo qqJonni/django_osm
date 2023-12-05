@@ -76,7 +76,8 @@ class Comment(models.Model):
         verbose_name_plural = 'Комментарии'
 
     def __str__(self):
-        return f'{self.author} - {self.place} - {self.published_at} - {self.update_at}'
+        formatted_published_at = self.published_at.strftime('%Y-%m-%d')
+        return f'{self.author} - {self.place} - {formatted_published_at}'
 
 
 

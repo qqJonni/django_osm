@@ -1,9 +1,10 @@
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, DetailView, UpdateView, DeleteView
 from django.views.generic.edit import FormMixin
 from django.views import View
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from core.forms import PlaceForm, PlaceImageForm, CommentForm
 from core.models import PlaceName, PlaceCategory, PlaceImage
@@ -130,7 +131,7 @@ def create_location(request, pk):
     return render(request, 'core/create_location.html', context)
 
 
-class UpdateLocationView(UpdateView):
+class UpdateLocationView(LoginRequiredMixin, UpdateView):
     model = PlaceName
     form_class = PlaceForm
     template_name = 'core/update_location.html'
@@ -139,11 +140,25 @@ class UpdateLocationView(UpdateView):
     def get_success_url(self):
         return reverse('index:location_details', args=[self.object.pk])
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        if self.request.user != kwargs['instance'].author:
+            return self.handle_no_permission()
+        return kwargs
 
-class DeleteLocationView(DeleteView):
+
+class DeleteLocationView(LoginRequiredMixin, DeleteView):
     model = PlaceName
     template_name = 'core/delete_location.html'
     context_object_name = 'location'
 
     def get_success_url(self):
         return reverse('index:index')
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.request.user != self.object.author:
+            return self.handle_no_permission()
+        success_url = self.get_success_url()
+        self.object.delete()
+        return HttpResponseRedirect(success_url)

@@ -8,6 +8,9 @@
         <h1>{{ location.title }}</h1>
         <h5>{{ location.category }}</h5>
 
+    <span class="float-right mr-3" style="color: red;">{{ request.user }}</span>
+
+
 
         <div class="container mt-5">
             {% for picture in location.pictures.all %}
@@ -15,9 +18,14 @@
             {% endfor %}
         </div>
         <div class="container mt-5">
-            <span>{{ location.short_description|truncatechars:"128" }}</span>
+            <span>{{ location.long_description|truncatechars:"128" }}</span>
+            {% if request.user == location.author %}
             <span class="float-right mr-3"><a href="{% url 'index:update_location' location.id %}">Редактировать пост</a> </span>
+            <span class="float-right mr-3"><a href="{% url 'index:delete_location' location.id %}">Удалить</a></span>
+
+            {% endif %}
         </div>
+
         <div class="container mt-5">
             <p>Комментарии ({{ location.comments_places.count }})</p>
             <hr>
@@ -45,7 +53,7 @@
                     <b>{{ loc.title }}</b>
                     <span>{{ loc.short_description }}</span>
                     <span class="float-right mr-3"><a href="{% url 'index:location_details' loc.id %}">Перейти</a> </span>
-                    <span class="float-right mr-3"><a href="{% url 'index:delete_location' loc.id %}">Удалить</a></span>
+
 
                 </li>
             </ul>
