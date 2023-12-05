@@ -96,7 +96,7 @@ class LocationDetailsView(FormMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['pictures'] = self.object.pictures.all()
-        context['list_locations'] = PlaceName.objects.all()
+        context['list_locations'] = PlaceName.objects.filter(author=self.object.author).exclude(pk=self.object.pk)
         return context
 
 
