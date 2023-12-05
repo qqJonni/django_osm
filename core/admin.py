@@ -25,6 +25,7 @@ class PostAdmin(SortableAdminBase, admin.ModelAdmin):
     fields = ["title", 'author', "short_description", "long_description", "latitude", "longitude", 'category', 'likes']
     list_display = ['title']
     inlines = [PicsInline, ]
+    search_fields = ['author']
 
 
 @admin.register(PlaceImage)
