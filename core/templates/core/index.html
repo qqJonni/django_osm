@@ -15,62 +15,79 @@
             {% endfor %}
         </ul>
     </li>
+
+
+     <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+           data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Слои карт
+            <i class="fas fa-user-circle"></i>
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li>
+                <select id="mapLayerSelector" class="form-select">
+                    <option value="osm">OpenStreetMap</option>
+                    <option value="cyclosm">CyclOSM</option>
+                    <option value="esri">Esri World Imagery</option>
+                </select>
+            </li>
+        </ul>
+    </li>
 {% endblock %}
 
 {% block map %}
-	    <div class="container mt-4">
+    <div class="container mt-4">
+        <div id="map" style="height: 600px; width: 100%; margin-top: 55px;"></div>
+        <script>
+            var map;
+            var currentLayer;
 
-            <div id="map" style="height: 600px; width: 100%; margin-top: 55px;"></div>
-            <script>
-                // Получаем данные точек из шаблона и парсим их
-                let stationsData = {{ places_posts|safe }};
-                // Создаем иконку
-                var skiIcon = L.icon({
-                    iconUrl: '{% static "icons/point-haiking.svg" %}',
-                    {#shadowUrl: 'static/leaf-shadow.png',#}
-                    iconSize:     [38, 95],
-                    shadowSize:   [50, 64],
-                    iconAnchor:   [22, 94],
-                    shadowAnchor: [4, 62],
-                    popupAnchor:  [-3, -76]
-                });
-                var skyIcon = L.icon({
-                    iconUrl: 'static/icons/sky.svg',
-                    shadowUrl: 'static/leaf-shadow.png',
-                    iconSize:     [38, 95],
-                    shadowSize:   [50, 64],
-                    iconAnchor:   [22, 94],
-                    shadowAnchor: [4, 62],
-                    popupAnchor:  [-3, -76]
-                });
-                var haykingIcon = L.icon({
-                    iconUrl: 'static/icons/hayking.svg',
-                    shadowUrl: 'static/leaf-shadow.png',
-                    iconSize:     [38, 95],
-                    shadowSize:   [50, 64],
-                    iconAnchor:   [22, 94],
-                    shadowAnchor: [4, 62],
-                    popupAnchor:  [-3, -76]
-                });
-                // Инициализируем карту
-                var map = L.map('map').setView([41.6941, 44.8337], 7);
-                L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            function initMap() {
+                map = L.map('map').setView([41.6941, 44.8337], 7);
+                currentLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     maxZoom: 19,
-                    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                 }).addTo(map);
-                // Добавляем маркеры для каждой точки
-                stationsData.features.forEach(feature => {
-                    // Создаем маркер
-                    var marker = L.marker(feature.geometry.coordinates.reverse(), {icon: skiIcon}).addTo(map);
-                    // Добавляем всплывающее окно (popup) с названием локации
-                    marker.bindPopup(`
-                    <strong><a class="nav-link" href="/location_details${feature.properties.detailsUrl}/">${feature.properties.title} <i class="fas fa-sign-in-alt"></i></a></strong>
-                    ${feature.properties.image_urls[0]}
 
-                    ${feature.properties.description_short}
+                let stationsData = {{ places_posts|safe }};
+
+                stationsData.features.forEach(feature => {
+                    var marker = L.marker(feature.geometry.coordinates.reverse()).addTo(map);
+                    marker.bindPopup(`
+                        <strong><a class="nav-link" href="/location_details${feature.properties.detailsUrl}/">${feature.properties.title} <i class="fas fa-sign-in-alt"></i></a></strong>
+                        ${feature.properties.image_urls[0]}
+                        ${feature.properties.description_short}
                     `);
-                    });
-            </script>
+                });
+
+                document.getElementById('mapLayerSelector').addEventListener('change', function () {
+                    map.removeLayer(currentLayer);
+
+                    var selectedLayer = this.value;
+
+                    switch (selectedLayer) {
+
+                        case 'cyclosm':
+                            currentLayer = L.tileLayer('https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png', {
+                                maxZoom: 20,
+                                attribution: '<a href="https://github.com/cyclosm/cyclosm-cartocss-style/releases" title="CyclOSM - Open Bicycle render">CyclOSM</a> | Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                            }).addTo(map);
+                            break;
+
+                        case 'esri':
+                            currentLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                                attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+                            }).addTo(map);
+                            break;
+
+                        default:
+                            currentLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                maxZoom: 19,
+                            }).addTo(map);
+                    }
+                });
+            }
+
+            document.addEventListener('DOMContentLoaded', initMap);
+        </script>
     </div>
 {% endblock %}
 
