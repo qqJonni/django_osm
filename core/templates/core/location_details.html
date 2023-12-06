@@ -4,49 +4,114 @@
 
 {% block content %}
 	<div class="container mt-5">
+        <div class="container">
         <!-- Отображение данных о месте -->
-        <h1>{{ location.title }}</h1>
+        <h2>{{ location.title }}</h2>
         <h5>{{ location.category }}</h5>
-
+        </div>
     <span class="float-right mr-3" style="color: red;">{{ request.user }}</span>
 
 
+        <div class="container mt-5">
+            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                    {% for picture in location.pictures.all %}
+                        <li data-target="#carouselExampleIndicators" data-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %}></li>
+                    {% endfor %}
+                </ol>
+                <div class="carousel-inner">
+                    {% for picture in location.pictures.all %}
+                        <div class="carousel-item{% if forloop.first %} active{% endif %}">
+                            <img src="{{ picture.picture.url }}" class="d-block w-100 img-fluid" alt="...">
+                        </div>
+                    {% endfor %}
+                </div>
+                <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        </div>`
 
         <div class="container mt-5">
-            {% for picture in location.pictures.all %}
-                <img src="{{ picture.picture.url }}" class="img-thumbnail" alt="...">
-            {% endfor %}
-        </div>
-        <div class="container mt-5">
-            <span>{{ location.long_description|truncatechars:"128" }}</span>
-            {% if request.user == location.author %}
-            <span class="float-right mr-3"><a href="{% url 'index:update_location' location.id %}">Редактировать пост</a> </span>
-            <span class="float-right mr-3"><a href="{% url 'index:delete_location' location.id %}">Удалить</a></span>
-            {% endif %}
-        </div>
+    <span class="description" data-full-description="{{ location.long_description }}">{{ location.long_description|truncatechars:"128" }}</span>
+    {% if request.user == location.author %}
+        {% if user.is_authenticated %}
         <div class="col-2">
             {% include 'likes/includes/add_like_place.html' with place_post_id=object.id %}
             <i class="fi-xnluxl-heart"></i>
         </div>
+        {% endif %}
+        <div class="container mt-5">
+        <span class="float-right mr-3"><a href="{% url 'index:update_location' location.id %}">Редактировать пост</a></span>
+        <span class="float-right mr-3"><a href="{% url 'index:delete_location' location.id %}">Удалить</a></span>
+        </div>
+    {% endif %}
+
+</div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var descriptions = document.querySelectorAll(".description");
+
+        descriptions.forEach(function (description) {
+            var fullDescription = description.getAttribute("data-full-description");
+            var truncatedDescription = description.innerHTML;
+
+            description.addEventListener("click", function () {
+                this.innerHTML = this.innerHTML === truncatedDescription ? fullDescription : truncatedDescription;
+            });
+
+            // Добавляем возможность сворачивания обратно после некоторого времени (например, 5 секунд)
+            var autoCollapseTimeout;
+            description.addEventListener("mouseenter", function () {
+                clearTimeout(autoCollapseTimeout);
+            });
+            description.addEventListener("mouseleave", function () {
+                autoCollapseTimeout = setTimeout(function () {
+                    description.innerHTML = truncatedDescription;
+                }, 5000);  // Измените значение на необходимое количество миллисекунд
+            });
+
+            description.setAttribute("data-truncated-description", truncatedDescription);
+        });
+    });
+</script>
+
+
+
 
         <div class="container mt-5">
-            <p>Комментарии ({{ location.comments_places.count }})</p>
-            <hr>
-
-            {% for comment in location.comments_places.all %}
+    <p>Комментарии ({{ location.comments_places.count }})</p>
+    <button id="toggle-comments-btn">Развернуть/Свернуть комментарии</button>
+    <div id="comments-section" style="display: none;">
+        <!-- Комментарии -->
+        {% for comment in location.comments_places.all %}
+            <div class="comment">
                 <p>{{ comment.text }}</p>
                 <small>{{ comment.author.username }} - {{ comment.published_at }}</small>
+                {% if user.is_authenticated %}
+                {% include 'likes/includes/add_like_comment.html' with comment_post_id=comment.id %}
+                {% endif %}
                 <hr>
-            {% endfor %}
-
-            <div class="col-12">
-                <form action="" id="add_form" method="post">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                </form>
-                <button form="add_form" type="submit" class="btn btn-primary">Добавить</button>
             </div>
+        {% endfor %}
+        <div class="col-12">
+            <form action="" id="add-comment-form" method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+            </form>
+            <button form="add-comment-form" type="submit" class="btn btn-primary">Добавить</button>
         </div>
+    </div>
+    <hr>
+    <!-- Остальной контент -->
+    </div>
         <div class="container mt-5">
             <span><h3>Ещё места {{ user.username }}</h3></span>
         </div>
@@ -54,8 +119,12 @@
             <ul class="list-group mt-4">
                 <li class="list-group-item">
                     <b>{{ loc.title }}</b>
+
                     <span>{{ loc.short_description }}</span>
                     <span class="float-right mr-3"><a href="{% url 'index:location_details' loc.id %}">Перейти</a> </span>
+                    {% if user.is_authenticated %}
+                    {% include 'likes/includes/add_like_place.html' with place_post_id=loc.id %}
+                    {% endif %}
 
 
                 </li>
@@ -63,5 +132,17 @@
         {% endfor %}
 
     </div>
+<script>
+document.getElementById('toggle-comments-btn').addEventListener('click', function() {
+    var commentsSection = document.getElementById('comments-section');
+    if (commentsSection.style.display === 'none' || commentsSection.style.display === '') {
+        commentsSection.style.display = 'block';
+        this.textContent = 'Свернуть комментарии';
+    } else {
+        commentsSection.style.display = 'none';
+        this.textContent = 'Развернуть комментарии';
+    }
+});
+</script>
 {% endblock %}
 
