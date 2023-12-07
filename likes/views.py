@@ -9,6 +9,7 @@ from likes.models import PlaceLikes, CommentLikes
 class AddPlaceLikeView(View):
     def post(self, request, *args, **kwargs):
         place_post_id = int(request.POST.get('place_post_id'))
+        print(request.POST.get('place_post_id'))
         user_id = int(request.user.id)
 
         url_from = request.POST.get('url_from')
@@ -38,6 +39,7 @@ class RemovePlaceLikeView(View):
 class AddCommentLikeView(View):
     def post(self, request, *args, **kwargs):
         comment_post_id = int(request.POST.get('comment_post_id'))
+        print(comment_post_id)
         user_id = int(request.user.id)
 
         url_from = request.POST.get('url_from')

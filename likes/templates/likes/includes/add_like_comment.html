@@ -7,7 +7,7 @@
     {% comment_likes_id comment_post_id as comment_likes_id %}
 {% endif %}
 
-<form action="{% if not is_liked_bool %}{% url 'likes:add' %}{% else %}{% url 'likes:remove' %}{% endif %}" method="post">
+<form action="{% if not is_liked_bool %}{% url 'likes:add-comment' %}{% else %}{% url 'likes:remove-comment' %}{% endif %}" method="post">
 {% csrf_token %}
     <input type="hidden" name="comment_post_id" value="{{ comment_post_id }}">
     <input type="hidden" name="user_id" value="{% if user.is_authenticated %}{{ request.user_id }}{% else %}None{% endif %}">
