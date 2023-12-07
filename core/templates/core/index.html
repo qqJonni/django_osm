@@ -35,61 +35,68 @@
 {% endblock %}
 
 {% block map %}
-    <div class="container mt-4">
-        <div id="map" style="height: 600px; width: 100%; margin-top: 55px;"></div>
-        <script>
-            var map;
-            var currentLayer;
+        <div class="container mt-4">
+            <div id="map" style="height: 600px; width: 100%; margin-top: 55px;"></div>
+            <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+            <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+            <script>
+                var map;
+                var currentLayer;
+                var markers;
 
-            function initMap() {
-                map = L.map('map').setView([41.6941, 44.8337], 7);
-                currentLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    maxZoom: 19,
-                }).addTo(map);
+                function initMap() {
+                    map = L.map('map').setView([41.6941, 44.8337], 7);
+                    currentLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        maxZoom: 19,
+                    }).addTo(map);
 
-                let stationsData = {{ places_posts|safe }};
+                    markers = L.markerClusterGroup();
 
-                stationsData.features.forEach(feature => {
-                    var marker = L.marker(feature.geometry.coordinates.reverse()).addTo(map);
-                    marker.bindPopup(`
-                        <strong><a class="nav-link" href="/location_details${feature.properties.detailsUrl}/">${feature.properties.title} <i class="fas fa-sign-in-alt"></i></a></strong>
-                        ${feature.properties.image_urls[0]}
-                        ${feature.properties.description_short}
-                    `);
-                });
+                    let stationsData = {{ places_posts|safe }};
 
-                document.getElementById('mapLayerSelector').addEventListener('change', function () {
-                    map.removeLayer(currentLayer);
+                    stationsData.features.forEach(feature => {
+                        var marker = L.marker(feature.geometry.coordinates.reverse());
 
-                    var selectedLayer = this.value;
+                        marker.bindPopup(`
+                            <strong><a class="nav-link" href="/location_details${feature.properties.detailsUrl}/">${feature.properties.title} <i class="fas fa-sign-in-alt"></i></a></strong>
+                            ${feature.properties.image_urls[0]}
+                            ${feature.properties.description_short}
+                        `);
 
-                    switch (selectedLayer) {
+                        markers.addLayer(marker);
+                    });
 
-                        case 'cyclosm':
-                            currentLayer = L.tileLayer('https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png', {
-                                maxZoom: 20,
-                                attribution: '<a href="https://github.com/cyclosm/cyclosm-cartocss-style/releases" title="CyclOSM - Open Bicycle render">CyclOSM</a> | Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                            }).addTo(map);
-                            break;
+                    map.addLayer(markers);
 
-                        case 'esri':
-                            currentLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-                                attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-                            }).addTo(map);
-                            break;
+                    document.getElementById('mapLayerSelector').addEventListener('change', function () {
+                        map.removeLayer(currentLayer);
 
-                        default:
-                            currentLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                                maxZoom: 19,
-                            }).addTo(map);
-                    }
-                });
-            }
+                        var selectedLayer = this.value;
 
-            document.addEventListener('DOMContentLoaded', initMap);
-        </script>
-    </div>
-{% endblock %}
+                        switch (selectedLayer) {
+                            case 'cyclosm':
+                                currentLayer = L.tileLayer('https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png', {
+                                    maxZoom: 20,
+                                    attribution: '<a href="https://github.com/cyclosm/cyclosm-cartocss-style/releases" title="CyclOSM - Open Bicycle render">CyclOSM</a> | Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                                }).addTo(map);
+                                break;
+                            case 'esri':
+                                currentLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                                    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+                                }).addTo(map);
+                                break;
+                            default:
+                                currentLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                    maxZoom: 19,
+                                }).addTo(map);
+                        }
+                    });
+                }
+
+                document.addEventListener('DOMContentLoaded', initMap);
+            </script>
+        </div>
+    {% endblock %}
 
 {% block content %}
 	    <div class="container mt-4">

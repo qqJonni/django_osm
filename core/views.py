@@ -11,6 +11,9 @@ from core.forms import PlaceForm, PlaceImageForm, CommentForm
 from core.models import PlaceName, PlaceCategory, PlaceImage
 from likes.models import PlaceLikes
 
+"""Эта переменная отвечает за отображение постов на главной странице с мигимальным колличеством лайков указанных в переменной"""
+_LIKE = 2
+
 
 class IndexView(ListView):
     model = PlaceName
@@ -33,7 +36,7 @@ class IndexView(ListView):
         context['categories'] = PlaceCategory.objects.all()
         context['title'] = 'Where to Travel'
         queryset = PlaceName.objects.all()
-        context['likes'] = queryset.annotate(like_count=Count('placelikes')).filter(like_count__gte=1).order_by('-like_count')
+        context['likes'] = queryset.annotate(like_count=Count('placelikes')).filter(like_count__gte=_LIKE).order_by('-like_count')
         return context
 
     def serialize_post(self, location):
