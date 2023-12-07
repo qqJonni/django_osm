@@ -27,6 +27,7 @@ class AddPlaceLikeView(View):
 class RemovePlaceLikeView(View):
     def post(self, request, *args, **kwargs):
         place_likes_id = int(request.POST.get('place_likes_id'))
+        print('Hellllllllloooo')
         url_from = request.POST.get('url_from')
 
         place_like = PlaceLikes.objects.get(id=place_likes_id)
@@ -55,10 +56,16 @@ class AddCommentLikeView(View):
 
 class RemoveCommentLikeView(View):
     def post(self, request, *args, **kwargs):
-        comment_likes_id = int(request.POST.get('comment_likes_id'))
-        url_from = request.POST.get('url_from')
+        comment_likes_id_str = request.POST.get('comment_likes_id')
+        if comment_likes_id_str is not None:
+            comment_likes_id = int(comment_likes_id_str)
+            url_from = request.POST.get('url_from')
 
-        comment_like = CommentLikes.objects.get(id=comment_likes_id)
-        comment_like.delete()
+            comment_like = CommentLikes.objects.get(id=comment_likes_id)
+            comment_like.delete()
 
-        return redirect(url_from)
+            return redirect(url_from)
+        else:
+            # Handle the case where comment_likes_id is None (optional)
+            # You can log a message or return an error response
+            pass
