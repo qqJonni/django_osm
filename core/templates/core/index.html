@@ -99,17 +99,17 @@
 
         <div class="container text-center">
             <div class="row">
-                {% for location in locations %}
-                <div class="col">
-                    <div class="card" style="width: 18rem;">
-                        <img src="{{ location.pictures.first.picture.url }}" class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ location.title }}</h5>
-                            <p class="card-text">{{ location.short_description }}</p>
-                            <a href="{% url 'index:location_details' location.id %}" class="btn btn-primary">Go here</a>
+                {% for like in likes %}
+                    <div class="col">
+                        <div class="card" style="width: 18rem;">
+                            <img src="{{ like.pictures.first.picture.url }}" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ like.title }}</h5>
+                                <p class="card-text">{{ like.short_description }}</p>
+                                <a href="{% url 'index:location_details' like.id %}" class="btn btn-primary">Go here</a>
+                            </div>
                         </div>
                     </div>
-                </div>
                 {% endfor %}
             </div>
         </div>

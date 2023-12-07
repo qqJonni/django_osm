@@ -27,7 +27,6 @@ class AddPlaceLikeView(View):
 class RemovePlaceLikeView(View):
     def post(self, request, *args, **kwargs):
         place_likes_id = int(request.POST.get('place_likes_id'))
-        print('Hellllllllloooo')
         url_from = request.POST.get('url_from')
 
         place_like = PlaceLikes.objects.get(id=place_likes_id)

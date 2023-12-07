@@ -1,3 +1,4 @@
+from django.db.models import Count
 from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
@@ -8,6 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from core.forms import PlaceForm, PlaceImageForm, CommentForm
 from core.models import PlaceName, PlaceCategory, PlaceImage
+from likes.models import PlaceLikes
 
 
 class IndexView(ListView):
@@ -30,6 +32,8 @@ class IndexView(ListView):
         }
         context['categories'] = PlaceCategory.objects.all()
         context['title'] = 'Where to Travel'
+        queryset = PlaceName.objects.all()
+        context['likes'] = queryset.annotate(like_count=Count('placelikes')).filter(like_count__gte=1).order_by('-like_count')
         return context
 
     def serialize_post(self, location):
@@ -47,7 +51,7 @@ class IndexView(ListView):
                 "detailsUrl": redirect_url,
                 "description_short": location.short_description,
                 "description_long": location.long_description,
-                "image_urls": image_urls
+                "image_urls": image_urls,
             }
         }
 
