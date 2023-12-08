@@ -7,22 +7,51 @@
     {% place_likes_id place_post_id as place_likes_id %}
 {% endif %}
 
-<form action="{% if not is_liked_bool %}{% url 'likes:add' %}{% else %}{% url 'likes:remove' %}{% endif %}" method="post">
-{% csrf_token %}
+<form
+    {% if not is_liked_bool %}
+        class="add-remove-place-like add-place-like"
+        action="{% url 'likes:add' %}"
+    {% else %}
+        class="add-remove-place-like remove-place-like"
+        action="{% url 'likes:remove' %}"
+    {% endif %}
+        method="post">{% csrf_token %}
+
     <input type="hidden" name="place_post_id" value="{{ place_post_id }}">
     <input type="hidden" name="user_id" value="{% if user.is_authenticated %}{{ request.user_id }}{% else %}None{% endif %}">
+    <input type="hidden" name="place_likes_id" value="{{ place_likes_id }}">
     <input type="hidden" name="url_from" value="{{ request.path }}">
 
-    {% if is_liked_bool %}
-        <input type="hidden" name="place_likes_id" value="{{ place_likes_id }}">
-    {% endif %}
-
-    <button type="submit" class="btn btn-danger">
+    <div class="like-btn-wrap">
         {% if not is_liked_bool %}
-            <i class="fi-xnluxl-heart"></i>
+            <button type="submit" class="add-like-btn btn btn-outline-danger">
+                <i class="far fa-heart"></i>
+                <span class="likes-qty">{{ likes_counter }}</span>
+            </button>
         {% else %}
-            <i class="fi-xnluxl-heart-solid"></i>
+            <button type="submit" class="remove-like-btn btn btn-outline-danger">
+                <i class="fas fa-heart"></i>
+                <span class="likes-qty">{{ likes_counter }}</span>
+            </button>
         {% endif %}
-        <span class="likes-qty">{{ likes_counter }}</span>
-    </button>
+    </div>
 </form>
+{#<form action="{% if not is_liked_bool %}{% url 'likes:add' %}{% else %}{% url 'likes:remove' %}{% endif %}" method="post">#}
+{#{% csrf_token %}#}
+{#    <input type="hidden" name="place_post_id" value="{{ place_post_id }}">#}
+{#    <input type="hidden" name="user_id" value="{% if user.is_authenticated %}{{ request.user_id }}{% else %}None{% endif %}">#}
+{#    <input type="hidden" name="url_from" value="{{ request.path }}">#}
+{##}
+{#    {% if is_liked_bool %}#}
+{#        <input type="hidden" name="place_likes_id" value="{{ place_likes_id }}">#}
+{#    {% endif %}#}
+{##}
+{#    <button type="submit" class="btn btn-danger">#}
+{#        {% if not is_liked_bool %}#}
+{#            <i class="fi-xnluxl-heart"></i>#}
+{#        {% else %}#}
+{#            <i class="fi-xnluxl-heart-solid"></i>#}
+{#        {% endif %}#}
+{#        <span class="likes-qty">{{ likes_counter }}</span>#}
+{#    </button>#}
+{#</form>#}

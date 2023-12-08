@@ -39,7 +39,7 @@
 
         <div class="container mt-5">
     <span class="description" data-full-description="{{ location.long_description }}">{{ location.long_description|truncatechars:"128" }}</span>
-    {% if request.user == location.author %}
+{#    {% if request.user == location.author %}#}
         {% if user.is_authenticated %}
         <div class="col-2">
             {% include 'likes/includes/add_like_place.html' with place_post_id=object.id %}
@@ -50,7 +50,7 @@
         <span class="float-right mr-3"><a href="{% url 'index:update_location' location.id %}">Редактировать пост</a></span>
         <span class="float-right mr-3"><a href="{% url 'index:delete_location' location.id %}">Удалить</a></span>
         </div>
-    {% endif %}
+{#    {% endif %}#}
 
 </div>
 
@@ -87,33 +87,35 @@
 
 
         <div class="container mt-5">
-    <p>Комментарии ({{ location.comments_places.count }})</p>
-    <button id="toggle-comments-btn">Развернуть/Свернуть комментарии</button>
-    <div id="comments-section" style="display: none;">
-        <!-- Комментарии -->
-        {% for comment in location.comments_places.all %}
-            <div class="comment">
-                <p>{{ comment.text }}</p>
-                <small>{{ comment.author.username }} - {{ comment.published_at }}</small>
-                {% if user.is_authenticated %}
-                {% include 'likes/includes/add_like_comment.html' with comment_post_id=comment.id %}
-                {% endif %}
+            <p>Комментарии ({{ location.comments_places.count }})</p>
+                <button id="toggle-comments-btn">Развернуть/Свернуть комментарии</button>
+                <div id="comments-section" style="display: none;">
+                    <!-- Комментарии -->
+                    {% for comment in location.comments_places.all %}
+                        <div class="comment">
+                            <p>{{ comment.text }}</p>
+                            <small>{{ comment.author.username }} - {{ comment.published_at }}</small>
+                            {% if user.is_authenticated %}
+                                {% include 'likes/includes/add_like_comment.html' with comment_post_id=comment.id %}
+                            {% endif %}
+                            <hr>
+                        </div>
+                    {% endfor %}
+                    {% if user.is_authenticated %}
+                    <div class="col-12">
+                        <form action="" id="add-comment-form" method="post">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                        </form>
+                        <button form="add-comment-form" type="submit" class="btn btn-primary">Добавить</button>
+                    </div>
+                    {% endif %}
+                </div>
                 <hr>
-            </div>
-        {% endfor %}
-        <div class="col-12">
-            <form action="" id="add-comment-form" method="post">
-                {% csrf_token %}
-                {{ form.as_p }}
-            </form>
-            <button form="add-comment-form" type="submit" class="btn btn-primary">Добавить</button>
-        </div>
-    </div>
-    <hr>
     <!-- Остальной контент -->
     </div>
         <div class="container mt-5">
-            <span><h3>Ещё места {{ user.username }}</h3></span>
+            <span><h3>Ещё места {{ location.author }}</h3></span>
         </div>
         {% for loc in list_locations %}
             <ul class="list-group mt-4">

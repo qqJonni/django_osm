@@ -1,15 +1,14 @@
-from django.urls import path, include
+from django.urls import path
 
-from likes.views import AddPlaceLikeView, RemovePlaceLikeView, AddCommentLikeView, RemoveCommentLikeView
+from likes.views import AddCommentLikeView, RemoveCommentLikeView, AddPlaceLikeView, RemovePlaceLikeView
 
 app_name = 'likes'
 
 urlpatterns = [
-    path('likes/', include([
-        path('add/', AddPlaceLikeView.as_view(), name='add'),
-        path('remove/', RemovePlaceLikeView.as_view(), name='remove'),
+    path('add/', AddPlaceLikeView.as_view(), name='add'),
+    path('remove/', RemovePlaceLikeView.as_view(), name='remove'),
 
-        path('add-comment/', AddCommentLikeView.as_view(), name='add-comment'),
-        path('remove-comment/', RemoveCommentLikeView.as_view(), name='remove-comment'),
-    ]))
+    path('add-comment/', AddCommentLikeView.as_view(), name='add-comment'),
+    path('remove-comment/', RemoveCommentLikeView.as_view(), name='remove-comment'),
+
 ]

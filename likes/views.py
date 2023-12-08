@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.views.generic import View
 
@@ -9,7 +10,6 @@ from likes.models import PlaceLikes, CommentLikes
 class AddPlaceLikeView(View):
     def post(self, request, *args, **kwargs):
         place_post_id = int(request.POST.get('place_post_id'))
-        print(request.POST.get('place_post_id'))
         user_id = int(request.user.id)
 
         url_from = request.POST.get('url_from')
@@ -23,6 +23,40 @@ class AddPlaceLikeView(View):
             place_like = PlaceLikes(place_post=place_post_inst, liked_by=user_inst, like=True)
             place_like.save()
         return redirect(url_from)
+
+
+# def ajax_add_like_place(request):
+#     place_post_id = int(request.POST.get('place_post_id'))
+#     user_id = int(request.user.id)
+#
+#     data = {
+#         'added': True,
+#     }
+#
+#     user_inst = User.objects.get(id=user_id)
+#     place_post_inst = PlaceName.objects.get(id=place_post_id)
+#
+#     try:
+#         place_like_inst = PlaceLikes.objects.get(place_post=place_post_inst, liked_by=user_inst)
+#     except Exception as e:
+#         place_like = PlaceLikes(place_post=place_post_inst, liked_by=user_inst, like=True)
+#         place_like.save()
+#     return JsonResponse(data)
+
+
+# def ajax_remove_like_place(request):
+#     place_likes_id = int(request.POST.get('place_likes_id'))
+#     user_id = int(request.user.id)
+#     url_from = request.POST.get('url_from')
+#
+#     data = {
+#         'removed': True,
+#     }
+#
+#     place_like = PlaceLikes.objects.get(id=place_likes_id)
+#     place_like.delete()
+#
+#     return JsonResponse(data)
 
 
 class RemovePlaceLikeView(View):
