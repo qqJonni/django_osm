@@ -108,8 +108,6 @@ class LocationDetailsView(FormMixin, DetailView):
 
 
 def create_location(request, pk):
-    location = get_object_or_404(PlaceName.objects.prefetch_related('pictures'), pk=pk)
-
     if request.method == 'POST':
         form = PlaceForm(request.POST)
         image_form = PlaceImageForm(request.POST, request.FILES)
@@ -128,30 +126,29 @@ def create_location(request, pk):
         image_form = PlaceImageForm()
 
     context = {
-        'location': location,
-        'pictures': location.pictures.all(),
         'title': 'Location',
         'form': form,
         'image_form': image_form,
+        'pk': pk
     }
 
     return render(request, 'core/create_location.html', context)
 
 
-class UpdateLocationView(LoginRequiredMixin, UpdateView):
-    model = PlaceName
-    form_class = PlaceForm
-    template_name = 'core/update_location.html'
-    context_object_name = 'location'
-
-    def get_success_url(self):
-        return reverse('index:location_details', args=[self.object.pk])
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        if self.request.user != kwargs['instance'].author:
-            return self.handle_no_permission()
-        return kwargs
+def update_location(request, pk):
+    location = PlaceName.objects.get(pk=pk)
+    if request.method == 'POST':
+        form = PlaceForm(data=request.POST, instance=location)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('index:location_details', args=[pk]))
+    else:
+        form = PlaceForm(instance=location)
+    context = {
+        'form': form,
+        'location': location
+    }
+    return render(request, 'core/update_location.html', context)
 
 
 class DeleteLocationView(LoginRequiredMixin, DeleteView):
