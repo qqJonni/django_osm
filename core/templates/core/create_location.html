@@ -2,6 +2,40 @@
 {% load static %}
 
 {% block content %}
+<style>
+    #map {
+        margin-top: 50px; /* Задайте необходимый отступ сверху */
+    }
+</style>
+
+    <div id="map" style="height: 400px; width: 600px;"></div>
+    <script>
+    var map = L.map('map').setView([41.6941, 44.8337], 8);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+
+    var marker;
+
+    function onMapClick(e) {
+        // Обновляем значения полей формы при клике на карту
+        document.getElementById('{{ form.latitude.id_for_label }}').value = e.latlng.lat;
+        document.getElementById('{{ form.longitude.id_for_label }}').value = e.latlng.lng;
+
+        // Удаляем предыдущий маркер, если он был
+        if (marker) {
+            map.removeLayer(marker);
+        }
+
+        // Создаем новый маркер и добавляем его на карту
+        marker = L.marker(e.latlng).addTo(map);
+    }
+
+    map.on('click', onMapClick);
+</script>
+
+
 	<div class="container mt-4">
     	<form action="{% url 'index:create_location' user.id %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}

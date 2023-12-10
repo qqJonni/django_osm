@@ -56,7 +56,7 @@ class AddPlaceLikeView(View):
 #     place_like = PlaceLikes.objects.get(id=place_likes_id)
 #     place_like.delete()
 #
-#     return JsonResponse(data)
+#     # return JsonResponse(data)
 
 
 class RemovePlaceLikeView(View):
@@ -92,7 +92,7 @@ class AddCommentLikeView(View):
 class RemoveCommentLikeView(View):
     def post(self, request, *args, **kwargs):
         comment_likes_id_str = request.POST.get('comment_likes_id')
-        if comment_likes_id_str is not None:
+        if comment_likes_id_str:
             comment_likes_id = int(comment_likes_id_str)
             url_from = request.POST.get('url_from')
 
