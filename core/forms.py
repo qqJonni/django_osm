@@ -1,10 +1,12 @@
 from django import forms
 from django.forms import Textarea
 from core.models import PlaceName, PlaceImage, Comment
+from multiupload.fields import MultiFileField
 
 
 class PlaceImageForm(forms.ModelForm):
-    picture = forms.FileField(widget=forms.FileInput(attrs={'class': 'custom-file-input'}), required=False)
+    picture = MultiFileField(min_num=1, max_num=20, max_file_size=1024*1024*5,
+                             widget=forms.FileInput(attrs={'class': 'custom-file-input'}), required=False)
 
     class Meta:
         model = PlaceImage
@@ -22,10 +24,12 @@ class PlaceForm(forms.ModelForm):
         'class': 'form-control py-4', 'placeholder': 'Введите координаты широты'}))
     longitude = forms.FloatField(widget=forms.NumberInput(attrs={
         'class': 'form-control py-4', 'placeholder': 'Введите координаты долготы'}))
+    picture = MultiFileField(min_num=1, max_num=20, max_file_size=1024 * 1024 * 5,
+                             widget=forms.FileInput(attrs={'class': 'custom-file-input'}), required=False)
 
     class Meta:
         model = PlaceName
-        fields = ['title', 'short_description', 'long_description', 'category', 'latitude', 'longitude']
+        fields = ['title', 'short_description', 'long_description', 'category', 'latitude', 'longitude', 'picture']
 
 
 class CommentForm(forms.ModelForm):

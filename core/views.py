@@ -11,7 +11,7 @@ from core.forms import PlaceForm, PlaceImageForm, CommentForm
 from core.models import PlaceName, PlaceCategory, PlaceImage
 from likes.models import PlaceLikes
 
-"""Эта переменная отвечает за отображение постов на главной странице с мигимальным колличеством лайков указанных в переменной"""
+"""Эта переменная отвечает за отображение постов на главной странице с минимальным колличеством лайков указанных в переменной"""
 _LIKE = 2
 
 
@@ -110,16 +110,17 @@ class LocationDetailsView(FormMixin, DetailView):
 def create_location(request, pk):
     if request.method == 'POST':
         form = PlaceForm(request.POST)
-        image_form = PlaceImageForm(request.POST, request.FILES)
+        image_form = PlaceImageForm(request.POST, request.FILES)  # Обработка изображений
 
         if form.is_valid() and image_form.is_valid():
             new_location = form.save(commit=False)
             new_location.author = request.user
             new_location.save()
-            picture = image_form.cleaned_data['picture']
-            if picture:
+
+            # Обработка изображений
+            for picture in request.FILES.getlist('picture'):
                 PlaceImage.objects.create(place=new_location, picture=picture)
-            form.save_m2m()
+
             return redirect('index:index')
     else:
         form = PlaceForm()

@@ -53,11 +53,17 @@
                            {{ form.longitude }}
             <div class="custom-file">
                             {{ image_form.picture }}
-            <label class="custom-file-label" for="{{ image_form.picture.id_for_label }}">Выберите фото</label>
+            <label class="custom-file-label" for="{{ image_form.picture.id_for_label }}" >Выберите фото</label>
             </div>
             <button type="submit" class="btn btn-primary">Добавить</button>
         </form>
     </div>
+
+    <script>
+        // Добавляем атрибут multiple к полю input[type="file"]
+        document.querySelector('input[type="file"]').setAttribute('multiple', 'multiple');
+    </script>
+
 {% endblock %}
 
 
