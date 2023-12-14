@@ -42,6 +42,7 @@ class PlaceImage(models.Model):
     sequence_number = models.IntegerField('Порядковый номер:', db_index=True, default=0, blank=True)
     place = models.ForeignKey(PlaceName, on_delete=models.CASCADE, verbose_name='Место', related_name='pictures')
     picture = models.FileField(upload_to='media_files/', verbose_name='Медиафайлы')
+    is_video = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = 'Картинка'
