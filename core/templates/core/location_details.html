@@ -14,25 +14,25 @@
 
         <div class="container mt-5">
             <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-    <ol class="carousel-indicators">
-        {% for media_item in pictures %}
-            <li data-target="#carouselExampleIndicators" data-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %}></li>
-        {% endfor %}
-    </ol>
-    <div class="carousel-inner">
-        {% for media_item in pictures %}
-            <div class="carousel-item{% if forloop.first %} active{% endif %}">
-                {% if media_item.is_video %}
-                    <video class="d-block w-100 plyr" controls>
-                        <source src="{{ media_item.picture.url }}" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                {% else %}
-                    <img src="{{ media_item.picture.url }}" class="d-block w-100 img-fluid" alt="...">
-                {% endif %}
-            </div>
-        {% endfor %}
-    </div>
+                <ol class="carousel-indicators">
+                    {% for media_item in pictures %}
+                        <li data-target="#carouselExampleIndicators" data-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %}></li>
+                    {% endfor %}
+                </ol>
+                <div class="carousel-inner">
+                    {% for media_item in pictures %}
+                        <div class="carousel-item{% if forloop.first %} active{% endif %}">
+                            {% if media_item.is_video %}
+                                <video class="d-block w-100 plyr" controls>
+                                    <source src="{{ media_item.picture.url }}" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            {% else %}
+                                <img src="{{ media_item.picture.url }}" class="d-block w-100 img-fluid" alt="...">
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
     <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
         <span class="sr-only">Previous</span>
@@ -46,7 +46,7 @@
 
     <script>
     document.addEventListener('DOMContentLoaded', function () {
-        var players = Plyr.setup('.plyr');
+        let players = Plyr.setup('.plyr');
     });
 </script>
 
@@ -96,9 +96,6 @@
         });
     });
 </script>
-
-
-
 
         <div class="container mt-5">
             <p>Комментарии ({{ location.comments_places.count }})</p>

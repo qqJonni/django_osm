@@ -1,6 +1,7 @@
 {% extends 'core/base.html' %}
 {% load static %}
 
+
 {% block dropdawn %}
 	<li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
@@ -53,18 +54,25 @@
                     let stationsData = {{ places_posts|safe }};
 
                     stationsData.features.forEach(feature => {
-                        var marker = L.marker(feature.geometry.coordinates.reverse());
+                    let marker = L.marker(feature.geometry.coordinates.reverse());
 
-                        marker.bindPopup(`
-                            <strong><a class="nav-link" href="/location_details${feature.properties.detailsUrl}/">${feature.properties.title} <i class="fas fa-sign-in-alt"></i></a></strong>
-                            ${feature.properties.image_urls[0]}
-                            ${feature.properties.description_short}
-                        `);
+                    let popupContent = `
+                    <strong><a class="nav-link" href="/location_details${feature.properties.detailsUrl}/">${feature.properties.title} <i class="fas fa-sign-in-alt"></i></a></strong>
 
-                        markers.addLayer(marker);
+                    <div class="popup-image-container" style="width: 200px; height: 100px; overflow: hidden;">
+                    ${feature.properties.image_urls}
+                    </div>
+                    <hr></hr>
+                    ${feature.properties.description_short}
+                    `;
+
+                    marker.bindPopup(popupContent, { autoPan: false });
+
+                    markers.addLayer(marker);
                     });
 
                     map.addLayer(markers);
+
 
                     document.getElementById('mapLayerSelector').addEventListener('change', function () {
                         map.removeLayer(currentLayer);
@@ -93,6 +101,13 @@
 
                 document.addEventListener('DOMContentLoaded', initMap);
             </script>
+        <style>
+            .popup-image-container img {
+                max-width: 100%;
+                height: auto;
+                }
+
+        </style>
         </div>
     {% endblock %}
 
